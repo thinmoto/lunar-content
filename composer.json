@@ -1,0 +1,24 @@
+{
+    "name": "thinmoto/lunar-content",
+    "require": {
+        "lunarphp/lunar": "^0.7.1"
+    },
+    "autoload": {
+        "psr-4": {
+            "Thinmoto\\LunarContent\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "thinmoto",
+            "email": "thinmoto@gmail.com"
+        }
+    ],
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Thinmoto\\LunarContent\\LunarContentServiceProvider"
+            ]
+        }
+    }
+}
