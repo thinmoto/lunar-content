@@ -1,7 +1,7 @@
 {
     "name": "thinmoto/lunar-content",
     "require": {
-        "lunarphp/lunar": "^0.7.1"
+        "lunarphp/lunar": "dev-updates"
     },
     "autoload": {
         "psr-4": {
