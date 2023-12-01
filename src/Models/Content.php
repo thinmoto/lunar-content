@@ -27,10 +27,10 @@ class Content extends BaseModel implements HasMedia
         return $this->hasManySyncable(ContentBlock::class, 'content_id', 'id');
     }
 
-    public function block($key)
+    public function block($alias)
     {
         foreach($this->blocks as $k => $block)
-            if($k == $key)
+            if($block->alias == $alias)
                 return $block;
 
         return null;

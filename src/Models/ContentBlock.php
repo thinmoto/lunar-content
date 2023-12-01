@@ -19,8 +19,35 @@ class ContentBlock extends BaseModel
     ];
 
     protected $casts = [
-        'content' => 'array',
+        'content' => 'object',
     ];
+
+    public function page(): \Illuminate\Database\Eloquent\Relations\BelongsTo
+    {
+        return $this->belongsTo(Content::class, 'content_id', 'id');
+    }
+
+    public function translate($field)
+    {
+        if(!is_object($field))
+            return $field;
+
+        if(isset($field->{app()->getLocale()}))
+            return $field->{app()->getLocale()};
+
+        if(isset($field->{app()->getFallbackLocale()}))
+            return $field->{app()->getFallbackLocale()};
+
+        return reset($field);
+    }
+
+    public function image($imageKey)
+    {
+        if($image = $this->page->getMediaByFieldKey($imageKey))
+            return $image->getFullUrl();
+
+        return '';
+    }
 
     public function getImagesKeys()
     {
