@@ -125,7 +125,7 @@
 
                     @if($this->content->exists)
                         @foreach($blocks as $blockKey => $block)
-                            <div id="section_{{ $blockKey }}">
+                            <div id="section_{{ $blockKey }}" wire:key="content_block_{{ $blockKey }}">
                                 <div class="space-y-4">
                                     <div class="overflow-hidden shadow sm:rounded-md">
                                         <div class="flex-col px-4 py-5 space-y-4 bg-white sm:p-6">
@@ -162,7 +162,7 @@
 
                                                 <header class="flex items-center justify-between">
                                                     <h3 class="text-lg font-medium leading-6 text-gray-900">
-                                                        {{ __($block['title']) }}
+                                                        {{ isset($block['title']) ? __($block['title']) : __('lunarcontent::content.hub.section').' '.($blockKey+1) }}
                                                     </h3>
                                                 </header>
 
@@ -210,7 +210,7 @@
 
                                                 <header class="flex items-center justify-between">
                                                     <h3 class="text-lg font-medium leading-6 text-gray-900">
-                                                        {{ __($block['title']) }}
+                                                        {{ isset($block['title']) ? __($block['title']) : __('lunarcontent::content.hub.section').' '.($blockKey+1) }}
                                                     </h3>
 
                                                     <x-hub::button tag="a"
@@ -247,6 +247,17 @@
                                                                         />
                                                                     </x-hub::input.group>
                                                                 </div>
+
+                                                                <x-hub::tooltip :text="__('lunarcontent::content.hub.remove_block')">
+                                                                    <button type="button"
+                                                                            wire:click.prevent="removeTextBlock('{{ $blockKey }}', '{{ $key }}')"
+                                                                            class="text-gray-400 hover:text-red-500 disabled:opacity-50 disabled:cursor-not-allowed"
+                                                                    >
+                                                                        <x-hub::icon ref="trash"
+                                                                                     style="solid"
+                                                                                     class="text-gray-400 hover:text-red-500" />
+                                                                    </button>
+                                                                </x-hub::tooltip>
                                                             </div>
                                                         </div>
                                                     @endforeach
@@ -256,7 +267,7 @@
 
                                                 <header class="flex items-center justify-between">
                                                     <h3 class="text-lg font-medium leading-6 text-gray-900">
-                                                        {{ __($block['title']) }}
+                                                        {{ isset($block['title']) ? __($block['title']) : __('lunarcontent::content.hub.section').' '.($blockKey+1) }}
                                                     </h3>
 
                                                     <x-hub::button tag="a"
@@ -357,7 +368,7 @@
                                             >
 
                                                 <span class="text-sm font-medium">
-                                                    {{ __($block['title']) }}
+                                                    {{ isset($block['title']) ? __($block['title']) : __('lunarcontent::content.hub.section').' '.($blockKey+1) }}
                                                 </span>
                                             </a>
                                         @endforeach

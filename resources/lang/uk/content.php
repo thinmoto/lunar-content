@@ -16,6 +16,7 @@ return [
         'meta_title' => 'Meta title',
         'meta_description' => 'Meta description',
         'meta_keywords' => 'Meta keywords',
+        'section' => 'Розділ',
         'section_main' => 'Основна інформація',
         'parent' => 'Батьківська сторінка',
         'section_textblock' => 'Текстові блоки',
@@ -24,5 +25,8 @@ return [
         'link' => 'Посилання',
         'image' => 'Зображення',
         'mobile_image' => 'Мобільне зображення',
+
+        'remove_block' => 'Видалити блок',
+        'remove_image' => 'Видалити зображення',
     ],
 ];

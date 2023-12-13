@@ -129,9 +129,9 @@ class ContentPage extends Component
                 break;
             }
 
-            if($modelBlock = $this->content->block($k))
+            if($modelBlock = $this->content->block($templateBlock['alias']))
                 if($modelBlock->kind == $templateBlock['kind'] && $modelBlock->content)
-                    $templateBlock['content'] = $modelBlock->content;
+                    $templateBlock['content'] = json_decode(json_encode($modelBlock->content), true);;
 
             $this->blocks[$k] = $templateBlock;
         }
@@ -192,6 +192,12 @@ class ContentPage extends Component
             'image' => uuid_create(),
             'text' => '',
         ];
+    }
+
+    public function removeTextBlock($blockKey, $sectionKey)
+    {
+        if(isset($this->blocks[$blockKey]['content'][$sectionKey]))
+            unset($this->blocks[$blockKey]['content'][$sectionKey]);
     }
 
     public function addSlide($blockKey)
