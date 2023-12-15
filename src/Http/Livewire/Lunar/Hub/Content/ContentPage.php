@@ -104,12 +104,21 @@ class ContentPage extends Component
         {
             $templateBlock['content'] = '';
 
+            if(!isset($templateBlock['fields']))
+                $templateBlock['fields'] = [];
+
             switch($templateBlock['kind'])
             {
+                case 'text':
+                    $templateBlock['content'] = [
+                        'text' => $this->emptyLang(),
+                    ];
+                break;
+
                 case 'content':
                     $templateBlock['content'] = [
-                        'title' => '',
-                        'text' => '',
+                        'title' => $this->emptyLang(),
+                        'text' => $this->emptyLang(),
                     ];
                 break;
 
@@ -120,7 +129,7 @@ class ContentPage extends Component
                         for($i = 0; $i < $templateBlock['count']; $i++)
                             $templateBlock['content'][$i] = [
                                 'image' => uuid_create(),
-                                'text' => '',
+                                'text' => $this->emptyLang(),
                             ];
                 break;
 
@@ -190,7 +199,7 @@ class ContentPage extends Component
     {
         $this->blocks[$blockKey]['content'][] = [
             'image' => uuid_create(),
-            'text' => '',
+            'text' => $this->emptyLang(),
         ];
     }
 
@@ -217,5 +226,15 @@ class ContentPage extends Component
             __('lunarcontent::content.hub.deleted'),
             'lunar-content.content.index'
         );
+    }
+
+    private function emptyLang()
+    {
+        $out = [];
+
+        foreach($this->languages as $language)
+            $out[$language->code] = '';
+
+        return $out;
     }
 }
