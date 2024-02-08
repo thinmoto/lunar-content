@@ -1,5 +1,5 @@
 <div wire:key="withimages_{{ $imageKey }}" x-data="{images:@entangle('withImages'),imageKey:'{{ $imageKey }}'}" x-init="console.log(typeof(images[imageKey]))">
-    <x-hub::input.group :label="$label" for="blocks.{{ $blockKey }}.content.{{ $imageKey }}" x-show="typeof(images[imageKey] != 'undefined')">
+    <x-hub::input.group :label="$label" for="{{ $imageKey }}" x-show="typeof(images[imageKey] != 'undefined')">
         <div class="flex">
             @if(isset($withImages[$imageKey]))
             <button type="button">
