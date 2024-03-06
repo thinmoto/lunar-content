@@ -3,7 +3,7 @@
         <div class="flex">
             @if(isset($withImages[$imageKey]))
             <button type="button">
-                <x-hub::thumbnail :src="$withImages[$imageKey]['thumbnail']" />
+                <img src="{{ $withImages[$imageKey]['thumbnail'] }}" class="h-16 rounded" />
             </button>
 
             <x-hub::tooltip :text="__('lunarcontent::content.hub.remove_image')">
