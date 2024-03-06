@@ -26,7 +26,7 @@ trait WithImages
         foreach($this->getWithImagesModel()->media as $media)
         {
             $this->withImages[$media->getCustomProperty('fieldKey')] = [
-                'thumbnail' => $media->getFullUrl('medium'),
+                'thumbnail' => $media->getFullUrl(),
                 //'filename' => $filename,
                 'original' => $media->getFullUrl(),
                 'withImagesImage' => true,
