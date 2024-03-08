@@ -106,12 +106,15 @@ trait WithImages
 					->substr(0, 128)
 					->append('.', $file->getClientOriginalExtension());
 
-				$media = $this->getWithImagesModel()->addMedia($file->getRealPath())
-					->usingFileName($filename)
-					->toMediaCollection('images')
-					->setCustomProperty('fieldKey', $fieldKey);
+				if(file_exists($file->getRealPath()))
+				{
+					$media = $this->getWithImagesModel()->addMedia($file->getRealPath())
+						->usingFileName($filename)
+						->toMediaCollection('images')
+						->setCustomProperty('fieldKey', $fieldKey);
 
-				$media->save();
+					$media->save();
+				}
 			}
 
             $leaveKeys[] = $fieldKey;
