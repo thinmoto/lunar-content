@@ -146,6 +146,11 @@ class ContentPage extends Component
                 if($modelBlock->kind == $templateBlock['kind'] && $modelBlock->content)
                     $templateBlock['content'] = json_decode(json_encode($modelBlock->content), true);;
 
+	        if($templateBlock['kind'] == 'textblocks')
+		        foreach($templateBlock['content'] as &$line)
+			        if(!isset($line['mobile_image']))
+				        $line['mobile_image'] = uuid_create();
+
             $this->blocks[$k] = $templateBlock;
         }
     }
