@@ -256,6 +256,10 @@
                                                                         @include('lunar-content::livewire.lunar.hub.content._one_image', ['imageKey' => $value['image'], 'label' => __('lunarcontent::content.hub.image')])
                                                                     @endif
 
+                                                                    @if($field == 'small_thumb')
+                                                                        @include('lunar-content::livewire.lunar.hub.content._one_image', ['imageKey' => $value['mobile_image'], 'label' => __('lunarcontent::content.hub.mobile_image')])
+                                                                    @endif
+
                                                                     @if($field == 'title')
                                                                         <div class="w-full">
                                                                             <x-hub::input.group :label="__('lunarcontent::content.hub.title')" for="blocks.{{ $blockKey }}.content.{{ $key }}.title.{{ $this->currentLanguage->code }}">

@@ -64,7 +64,10 @@ class ContentPage extends Component
             if($block['kind'] == 'textblocks')
             {
                 foreach($this->blocks[$blockKey]['content'] as $key => $content)
-                    $out[] = 'blocks.'.$blockKey.'.content.'.$key.'.image';
+                {
+	                $out[] = 'blocks.' . $blockKey . '.content.' . $key . '.image';
+	                $out[] = 'blocks.' . $blockKey . '.content.' . $key . '.small_image';
+                }
             }
         }
 
@@ -129,6 +132,7 @@ class ContentPage extends Component
                         for($i = 0; $i < $templateBlock['count']; $i++)
                             $templateBlock['content'][$i] = [
                                 'image' => uuid_create(),
+                                'mobile_image' => uuid_create(),
                                 'text' => $this->emptyLang(),
                             ];
                 break;
@@ -199,6 +203,7 @@ class ContentPage extends Component
     {
         $this->blocks[$blockKey]['content'][] = [
             'image' => uuid_create(),
+            'mobile_image' => uuid_create(),
             'text' => $this->emptyLang(),
         ];
     }
