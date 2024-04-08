@@ -31,220 +31,238 @@ class ContentPage extends Component
         $this->mountWithImages();
     }
 
-    public function render()
-    {
-        return view('lunar-content::livewire.lunar.hub.content.page')
+public function render()
+{
+    return view('lunar-content::livewire.lunar.hub.content.page')
             ->layout('adminhub::layouts.base');
-    }
+}
 
-    protected function getListeners()
-    {
-        return array_merge(
-            [],
+protected function getListeners()
+{
+    return array_merge(
+        [],
             $this->withImagesListener(),
         );
-    }
+}
 
-    public function getHasUrlsModel()
+public function getHasUrlsModel()
+{
+    return $this->content;
+}
+
+public function getWithImagesModel()
+{
+    return $this->content;
+}
+
+public function getImagesKeys()
+{
+    $out = [];
+
+    foreach($this->template as $blockKey => $block)
     {
-        return $this->content;
-    }
-
-    public function getWithImagesModel()
-    {
-        return $this->content;
-    }
-
-    public function getImagesKeys()
-    {
-        $out = [];
-
-        foreach($this->template as $blockKey => $block)
+        if($block['kind'] == 'textblocks')
         {
-            if($block['kind'] == 'textblocks')
+            foreach($this->blocks[$blockKey]['content'] as $key => $content)
             {
-                foreach($this->blocks[$blockKey]['content'] as $key => $content)
-                {
-	                $out[] = 'blocks.' . $blockKey . '.content.' . $key . '.image';
-	                $out[] = 'blocks.' . $blockKey . '.content.' . $key . '.small_image';
-                }
+                $out[] = 'blocks.' . $blockKey . '.content.' . $key . '.image';
+                $out[] = 'blocks.' . $blockKey . '.content.' . $key . '.small_image';
             }
         }
+    }
 
         return $out;
-    }
+}
 
-    public function getTemplatesProperty()
+public function getTemplatesProperty()
+{
+    return config('lunar-content.templates', []);
+}
+
+public function getTemplateProperty()
+{
+    return $this->templates[$this->content->template];
+}
+
+public function getPagesProperty()
+{
+    $query = Content::query();
+
+    if($this->content->exists)
+        $query->where('id', '<>', $this->content->id);
+
+    return $query->pluck('name', 'id');
+}
+
+public function updatedContentTemplate()
+{
+    $this->remapContentBlocks();
+}
+
+protected function remapContentBlocks()
+{
+    $this->blocks = [];
+
+    foreach($this->template as $k => $templateBlock)
     {
-        return config('lunar-content.templates', []);
-    }
+        $templateBlock['content'] = '';
 
-    public function getTemplateProperty()
-    {
-        return $this->templates[$this->content->template];
-    }
+        if(!isset($templateBlock['fields']))
+            $templateBlock['fields'] = [];
 
-	public function getPagesProperty()
-	{
-		$query = Content::query();
-
-        if($this->content->exists)
-            $query->where('id', '<>', $this->content->id);
-
-        return $query->pluck('name', 'id');
-	}
-
-    public function updatedContentTemplate()
-    {
-        $this->remapContentBlocks();
-    }
-
-    protected function remapContentBlocks()
-    {
-        $this->blocks = [];
-
-        foreach($this->template as $k => $templateBlock)
-        {
-            $templateBlock['content'] = '';
-
-            if(!isset($templateBlock['fields']))
-                $templateBlock['fields'] = [];
-
-            switch($templateBlock['kind'])
+        switch($templateBlock['kind'])
             {
                 case 'text':
                     $templateBlock['content'] = [
                         'text' => $this->emptyLang(),
                     ];
-                break;
+                    break;
 
-                case 'content':
-                    $templateBlock['content'] = [
-                        'title' => $this->emptyLang(),
+                    case 'content':
+                        $templateBlock['content'] = [
+                            'title' => $this->emptyLang(),
                         'text' => $this->emptyLang(),
                     ];
-                break;
+                        break;
 
-                case 'textblocks':
-                    $templateBlock['content'] = [];
+                        case 'textblocks':
+                            $templateBlock['content'] = [];
 
-                    if(isset($templateBlock['count']))
-                        for($i = 0; $i < $templateBlock['count']; $i++)
-                            $templateBlock['content'][$i] = [
+                            if(isset($templateBlock['count']))
+                                for($i = 0; $i < $templateBlock['count']; $i++)
+                                    $templateBlock['content'][$i] = [
+                                        'state' => true,
                                 'image' => uuid_create(),
                                 'mobile_image' => uuid_create(),
                                 'text' => $this->emptyLang(),
                             ];
-                break;
+                            break;
 
-                case 'slider':
-                    $templateBlock['content'] = [];
-                break;
+                            case 'slider':
+                                $templateBlock['content'] = [];
+                                break;
             }
 
             if($modelBlock = $this->content->block($templateBlock['alias']))
                 if($modelBlock->kind == $templateBlock['kind'] && $modelBlock->content)
                     $templateBlock['content'] = json_decode(json_encode($modelBlock->content), true);;
 
-	        if($templateBlock['kind'] == 'textblocks')
-		        foreach($templateBlock['content'] as &$line)
-			        if(!isset($line['mobile_image']))
-				        $line['mobile_image'] = uuid_create();
+                    if($templateBlock['kind'] == 'textblocks')
+                    {
+                        foreach($templateBlock['content'] as &$line)
+                        {
+                            if(!isset($line['state']))
+                                $line['state'] = true;
+
+                            if(!isset($line['mobile_image']))
+                                $line['mobile_image'] = uuid_create();
+                        }
+                    }
+
+	        if($templateBlock['kind'] == 'slider')
+            {
+                foreach($templateBlock['content'] as &$line)
+                {
+                    if(!isset($line['state']))
+                        $line['state'] = true;
+                }
+            }
 
             $this->blocks[$k] = $templateBlock;
-        }
     }
+}
 
-    protected function rules()
-    {
-        $allowedTemplates = array_keys($this->templates);
-        $allowedPages = array_keys($this->templates);
+protected function rules()
+{
+    $allowedTemplates = array_keys($this->templates);
+    $allowedPages = array_keys($this->templates);
 
-        $rules = [
-            'content.name' => 'required|string',
+    $rules = [
+        'content.name' => 'required|string',
             'content.template' => 'required|string|in:'.implode(',', $allowedTemplates),
             'content.parent_id' => 'nullable|string|in:'.implode(',', $allowedPages),
         ];
 
-        return array_merge(
-            $rules,
+    return array_merge(
+        $rules,
             $this->hasUrlsValidationRules(true)
         );
-    }
+}
 
-    public function update()
-    {
-        $this->validate();
-        $this->validateUrls();
+public function update()
+{
+    $this->validate();
+    $this->validateUrls();
 
-        $this->content->save();
+    $this->content->save();
 
-        $this->saveWithImages();
-        $this->content->blocks()->sync($this->blocks);
+    $this->saveWithImages();
+    $this->content->blocks()->sync($this->blocks);
 
-        $this->saveUrls();
+    $this->saveUrls();
 
-        //$this->updateSlots();
+    //$this->updateSlots();
 
         $this->notify(
             __('lunarcontent::content.hub.saved'),
             'lunar-content.content.show',
             ['content' => $this->content]
         );
-    }
+}
 
-    public function sort($event)
-    {
-        $out = [];
-        list($kind, $blockNum) = explode('_', $event['group']);
+public function sort($event)
+{
+    $out = [];
+    list($kind, $blockNum) = explode('_', $event['group']);
 
-        foreach($event['items'] as $order => $item)
-            $out[$order] = $this->blocks[$blockNum]['content'][$item['id']];
+    foreach($event['items'] as $order => $item)
+        $out[$order] = $this->blocks[$blockNum]['content'][$item['id']];
 
-        $this->blocks[$blockNum]['content'] = $out;
-    }
+    $this->blocks[$blockNum]['content'] = $out;
+}
 
-    public function addTextBlock($blockKey)
-    {
-        $this->blocks[$blockKey]['content'][] = [
-            'image' => uuid_create(),
+public function addTextBlock($blockKey)
+{
+    $this->blocks[$blockKey]['content'][] = [
+        'image' => uuid_create(),
             'mobile_image' => uuid_create(),
             'text' => $this->emptyLang(),
         ];
-    }
+}
 
-    public function removeTextBlock($blockKey, $sectionKey)
-    {
-        if(isset($this->blocks[$blockKey]['content'][$sectionKey]))
-            unset($this->blocks[$blockKey]['content'][$sectionKey]);
-    }
+public function removeTextBlock($blockKey, $sectionKey)
+{
+    if(isset($this->blocks[$blockKey]['content'][$sectionKey]))
+        unset($this->blocks[$blockKey]['content'][$sectionKey]);
+}
 
-    public function addSlide($blockKey)
-    {
-        $this->blocks[$blockKey]['content'][] = [
+public function addSlide($blockKey)
+{
+    $this->blocks[$blockKey]['content'][] = [
+        'state' => true,
             'image' => uuid_create(),
             'mobile_image' => uuid_create(),
             'link' => '',
         ];
-    }
+}
 
-    public function deleteContent()
-    {
-        $this->content->delete();
+public function deleteContent()
+{
+    $this->content->delete();
 
-        $this->notify(
-            __('lunarcontent::content.hub.deleted'),
+    $this->notify(
+        __('lunarcontent::content.hub.deleted'),
             'lunar-content.content.index'
         );
-    }
+}
 
-    private function emptyLang()
-    {
-        $out = [];
+private function emptyLang()
+{
+    $out = [];
 
-        foreach($this->languages as $language)
-            $out[$language->code] = '';
+    foreach($this->languages as $language)
+        $out[$language->code] = '';
 
-        return $out;
-    }
+    return $out;
+}
 }

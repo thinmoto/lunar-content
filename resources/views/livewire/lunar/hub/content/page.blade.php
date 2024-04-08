@@ -251,56 +251,68 @@
                                                                     </div>
                                                                 @endif
 
-                                                                @foreach($block['fields'] as $field)
-                                                                    @if($field == 'thumb')
-                                                                        @include('lunar-content::livewire.lunar.hub.content._one_image', ['imageKey' => $value['image'], 'label' => __('lunarcontent::content.hub.image')])
-                                                                    @endif
+                                                                <div>
+                                                                    <x-hub::input.toggle wire:model="blocks.{{ $blockKey }}.content.{{ $key }}.state"/>
+                                                                </div>
 
-                                                                    @if($field == 'small_thumb')
-                                                                        @include('lunar-content::livewire.lunar.hub.content._one_image', ['imageKey' => $value['mobile_image'], 'label' => __('lunarcontent::content.hub.mobile_image')])
-                                                                    @endif
+                                                                <div class="space-y-4">
+                                                                    @foreach($block['fields'] as $field)
+                                                                        @if($field == 'thumb')
+                                                                            @include('lunar-content::livewire.lunar.hub.content._one_image', ['imageKey' => $value['image'], 'label' => __('lunarcontent::content.hub.image')])
+                                                                        @endif
 
-                                                                    @if($field == 'title')
-                                                                        <div class="w-full">
-                                                                            <x-hub::input.group :label="__('lunarcontent::content.hub.title')" for="blocks.{{ $blockKey }}.content.{{ $key }}.title.{{ $this->currentLanguage->code }}">
-                                                                                <x-hub::input.text
-                                                                                    wire:model="blocks.{{ $blockKey }}.content.{{ $key }}.title.{{ $this->currentLanguage->code }}"
-                                                                                />
-                                                                            </x-hub::input.group>
-                                                                        </div>
-                                                                    @endif
+                                                                        @if($field == 'small_thumb')
+                                                                            @include('lunar-content::livewire.lunar.hub.content._one_image', ['imageKey' => $value['mobile_image'], 'label' => __('lunarcontent::content.hub.mobile_image')])
+                                                                        @endif
+                                                                    @endforeach
+                                                                </div>
 
-                                                                    @if($field == 'text')
-                                                                        <div class="w-full">
-                                                                            <x-hub::input.group :label="__('lunarcontent::content.hub.text')" for="blocks.{{ $blockKey }}.content.{{ $key }}.text.{{ $this->currentLanguage->code }}">
-                                                                                <x-hub::input.textarea
-                                                                                    wire:model="blocks.{{ $blockKey }}.content.{{ $key }}.text.{{ $this->currentLanguage->code }}"
-                                                                                />
-                                                                            </x-hub::input.group>
-                                                                        </div>
-                                                                    @endif
+                                                                <div class="flex flex-wrap gap-2 w-full">
+                                                                    @foreach($block['fields'] as $field)
+                                                                        @if($field == 'title')
+                                                                            <div class="w-full">
+                                                                                <x-hub::input.group :label="__('lunarcontent::content.hub.title')" for="blocks.{{ $blockKey }}.content.{{ $key }}.title.{{ $this->currentLanguage->code }}">
+                                                                                    <x-hub::input.text
+                                                                                            wire:model="blocks.{{ $blockKey }}.content.{{ $key }}.title.{{ $this->currentLanguage->code }}"
+                                                                                    />
+                                                                                </x-hub::input.group>
+                                                                            </div>
+                                                                        @endif
 
-                                                                    @if($field == 'url')
-                                                                        <div class="w-full">
-                                                                            <x-hub::input.group :label="__('lunarcontent::content.hub.url')" for="blocks.{{ $blockKey }}.content.{{ $key }}.url.{{ $this->currentLanguage->code }}">
-                                                                                <x-hub::input.text
-                                                                                    wire:model="blocks.{{ $blockKey }}.content.{{ $key }}.url.{{ $this->currentLanguage->code }}"
-                                                                                />
-                                                                            </x-hub::input.group>
-                                                                        </div>
-                                                                    @endif
-                                                                @endforeach
+                                                                        @if($field == 'text')
+                                                                            <div class="w-full">
+                                                                                <x-hub::input.group :label="__('lunarcontent::content.hub.text')" for="blocks.{{ $blockKey }}.content.{{ $key }}.text.{{ $this->currentLanguage->code }}">
+                                                                                    <x-hub::input.textarea
+                                                                                            wire:model="blocks.{{ $blockKey }}.content.{{ $key }}.text.{{ $this->currentLanguage->code }}"
+                                                                                    />
+                                                                                </x-hub::input.group>
+                                                                            </div>
+                                                                        @endif
 
-                                                                <x-hub::tooltip :text="__('lunarcontent::content.hub.remove_block')">
-                                                                    <button type="button"
-                                                                            wire:click.prevent="removeTextBlock('{{ $blockKey }}', '{{ $key }}')"
-                                                                            class="text-gray-400 hover:text-red-500 disabled:opacity-50 disabled:cursor-not-allowed"
-                                                                    >
-                                                                        <x-hub::icon ref="trash"
-                                                                                     style="solid"
-                                                                                     class="text-gray-400 hover:text-red-500" />
-                                                                    </button>
-                                                                </x-hub::tooltip>
+                                                                        @if($field == 'url')
+                                                                            <div class="w-full">
+                                                                                <x-hub::input.group :label="__('lunarcontent::content.hub.url')" for="blocks.{{ $blockKey }}.content.{{ $key }}.url.{{ $this->currentLanguage->code }}">
+                                                                                    <x-hub::input.text
+                                                                                            wire:model="blocks.{{ $blockKey }}.content.{{ $key }}.url.{{ $this->currentLanguage->code }}"
+                                                                                    />
+                                                                                </x-hub::input.group>
+                                                                            </div>
+                                                                        @endif
+                                                                    @endforeach
+                                                                </div>
+
+                                                                <div>
+                                                                    <x-hub::tooltip :text="__('lunarcontent::content.hub.remove_block')">
+                                                                        <button type="button"
+                                                                                wire:click.prevent="removeTextBlock('{{ $blockKey }}', '{{ $key }}')"
+                                                                                class="text-gray-400 hover:text-red-500 disabled:opacity-50 disabled:cursor-not-allowed"
+                                                                        >
+                                                                            <x-hub::icon ref="trash"
+                                                                                         style="solid"
+                                                                                         class="text-gray-400 hover:text-red-500" />
+                                                                        </button>
+                                                                    </x-hub::tooltip>
+                                                                </div>
                                                             </div>
                                                         </div>
                                                     @endforeach
@@ -338,8 +350,14 @@
                                                                     </div>
                                                                 @endif
 
-                                                                @include('lunar-content::livewire.lunar.hub.content._one_image', ['imageKey' => $value['image'], 'label' => __('lunarcontent::content.hub.image')])
-                                                                @include('lunar-content::livewire.lunar.hub.content._one_image', ['imageKey' => $value['mobile_image'], 'label' => __('lunarcontent::content.hub.mobile_image')])
+                                                                <div>
+                                                                    <x-hub::input.toggle wire:model="blocks.{{ $blockKey }}.content.{{ $key }}.state"/>
+                                                                </div>
+
+                                                                <div class="flex gap-6 label-nowrap">
+                                                                    @include('lunar-content::livewire.lunar.hub.content._one_image', ['imageKey' => $value['image'], 'label' => __('lunarcontent::content.hub.image')])
+                                                                    @include('lunar-content::livewire.lunar.hub.content._one_image', ['imageKey' => $value['mobile_image'], 'label' => __('lunarcontent::content.hub.mobile_image')])
+                                                                </div>
 
                                                                 <div class="w-full">
                                                                     <x-hub::input.group :label="__('lunarcontent::content.hub.link')" for="blocks.{{ $blockKey }}.content.{{ $key }}.link">
@@ -445,8 +463,8 @@
                     </div>
                 </div>
             @endforeach--}}
-        </div>
     </div>
+</div>
 
     <x-hub::modal.dialog wire:model="showDeleteConfirm">
         <x-slot name="title">
@@ -463,8 +481,8 @@
 
         <x-slot name="footer">
             <x-hub::button type="button"
-                           wire:click.prevent="$set('showDeleteConfirm', false)"
-                           theme="gray">
+                wire:click.prevent="$set('showDeleteConfirm', false)"
+                theme="gray">
                 {{ __('adminhub::global.cancel') }}
             </x-hub::button>
 
@@ -478,6 +496,11 @@
         .image-upload
         {
             min-width: 130px;
+        }
+
+        .label-nowrap label.flex
+        {
+            white-space: nowrap;
         }
     </style>
 </div>
